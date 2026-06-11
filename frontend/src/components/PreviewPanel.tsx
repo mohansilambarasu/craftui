@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Monitor, Tablet, Smartphone, Code2, Eye, Copy, Download, Check } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import type { PreviewMode, DeviceMode } from '../types';
@@ -9,10 +8,10 @@ interface PreviewPanelProps {
   isGenerating: boolean;
 }
 
-const DEVICE_WIDTHS: Record<DeviceMode, string> = {
-  desktop: '100%',
-  tablet: '768px',
-  mobile: '375px',
+const DEVICE_WIDTHS: Record<DeviceMode, number> = {
+  desktop: 1280,
+  tablet: 768,
+  mobile: 375,
 };
 
 function cleanCode(raw: string): string {
@@ -59,6 +58,10 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
   const [copied, setCopied] = useState(false);
   const [previewHTML, setPreviewHTML] = useState('');
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  const iframeWidth = DEVICE_WIDTHS[device];
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -68,6 +71,18 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
     }, isGenerating ? 2000 : 500);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [code, isGenerating]);
+
+  useEffect(() => {
+    const updateScale = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth - 48;
+        setScale(Math.min(1, containerWidth / iframeWidth));
+      }
+    };
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, [iframeWidth]);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(code);
@@ -86,157 +101,255 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#0a0a0a] rounded-2xl border border-white/10 overflow-hidden">
+    <section
+      id="preview-section"
+      style={{
+        background: '#EEE0CC',
+        borderTop: '1px solid rgba(96,116,86,0.15)',
+      }}
+      className="w-full py-12 px-6"
+    >
+      <div className="max-w-7xl mx-auto">
 
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-[#111111]">
-        <div className="flex items-center gap-1 bg-white/5 rounded-lg p-1">
-          <button
-            onClick={() => setMode('preview')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${mode === 'preview' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/70'}`}
+        <div className="mb-8">
+          <div
+            className="text-xs font-bold tracking-widest uppercase mb-2"
+            style={{ color: 'rgba(42,31,31,0.35)' }}
           >
-            <Eye size={12} /> Preview
-          </button>
-          <button
-            onClick={() => setMode('code')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${mode === 'code' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/70'}`}
+            Step 02 — Preview
+          </div>
+          <h2
+            className="font-black mb-2"
+            style={{ fontSize: '28px', color: '#2A1F1F', letterSpacing: '-1px' }}
           >
-            <Code2 size={12} /> Code
-          </button>
+            Your component, live.
+          </h2>
+          <p className="text-sm" style={{ color: 'rgba(42,31,31,0.45)' }}>
+            See it render instantly. Switch between preview and code. Download when ready.
+          </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          {mode === 'preview' && (
-            <div className="flex items-center gap-1 bg-white/5 rounded-lg p-1">
-              {([
-                { id: 'desktop', icon: Monitor },
-                { id: 'tablet', icon: Tablet },
-                { id: 'mobile', icon: Smartphone },
-              ] as { id: DeviceMode; icon: React.ElementType }[]).map(({ id, icon: Icon }) => (
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{
+            background: '#F7F2EA',
+            border: '1px solid rgba(96,116,86,0.2)',
+            boxShadow: '0 4px 24px rgba(42,31,31,0.06)',
+          }}
+        >
+          <div
+            className="flex items-center justify-between px-5 py-3"
+            style={{
+              borderBottom: '1px solid rgba(96,116,86,0.12)',
+              background: '#EEE0CC',
+            }}
+          >
+            <div
+              className="flex gap-1 p-1 rounded-lg"
+              style={{ background: 'rgba(96,116,86,0.1)' }}
+            >
+              {[
+                { id: 'preview', icon: <Eye size={12} />, label: 'Preview' },
+                { id: 'code', icon: <Code2 size={12} />, label: 'Code' },
+              ].map(({ id, icon, label }) => (
                 <button
                   key={id}
-                  onClick={() => setDevice(id)}
-                  className={`p-1.5 rounded-md transition-all ${device === id ? 'bg-white/10 text-white' : 'text-white/30 hover:text-white/60'}`}
+                  onClick={() => setMode(id as PreviewMode)}
+                  className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md transition-all"
+                  style={{
+                    background: mode === id ? '#F7F2EA' : 'transparent',
+                    color: mode === id ? '#2A1F1F' : 'rgba(42,31,31,0.4)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: mode === id ? '0 1px 3px rgba(42,31,31,0.1)' : 'none',
+                  }}
                 >
-                  <Icon size={13} />
+                  {icon} {label}
                 </button>
               ))}
             </div>
-          )}
 
-          {code && (
-            <div className="flex items-center gap-1">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleCopy}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white/50 hover:text-white border border-white/10 hover:border-white/20 transition-all"
-              >
-                {copied ? <Check size={12} className="text-green-400" /> : <Copy size={12} />}
-                {copied ? 'Copied' : 'Copy'}
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleDownload}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white/50 hover:text-white border border-white/10 hover:border-white/20 transition-all"
-              >
-                <Download size={12} />
-                .tsx
-              </motion.button>
+            <div className="flex items-center gap-3">
+              {mode === 'preview' && (
+                <div
+                  className="flex gap-1 p-1 rounded-lg"
+                  style={{ background: 'rgba(96,116,86,0.1)' }}
+                >
+                  {([
+                    { id: 'desktop', icon: <Monitor size={12} /> },
+                    { id: 'tablet', icon: <Tablet size={12} /> },
+                    { id: 'mobile', icon: <Smartphone size={12} /> },
+                  ] as { id: DeviceMode; icon: React.ReactNode }[]).map(({ id, icon }) => (
+                    <button
+                      key={id}
+                      onClick={() => setDevice(id)}
+                      className="p-1.5 rounded-md transition-all"
+                      style={{
+                        background: device === id ? '#607456' : 'transparent',
+                        color: device === id ? '#EEE0CC' : 'rgba(42,31,31,0.35)',
+                        border: 'none',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {icon}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {code && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
+                    style={{
+                      background: 'rgba(96,116,86,0.08)',
+                      border: '1px solid rgba(96,116,86,0.2)',
+                      color: copied ? '#607456' : 'rgba(42,31,31,0.5)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {copied ? <Check size={11} /> : <Copy size={11} />}
+                    {copied ? 'Copied' : 'Copy'}
+                  </button>
+                  <button
+                    onClick={handleDownload}
+                    className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
+                    style={{
+                      background: '#607456',
+                      border: 'none',
+                      color: '#EEE0CC',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.background = '#506346')}
+                    onMouseLeave={e => (e.currentTarget.style.background = '#607456')}
+                  >
+                    <Download size={11} />
+                    .tsx
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+          </div>
+
+          <div ref={containerRef} className="relative">
+            {mode === 'preview' ? (
+              <div
+                className="flex items-start justify-center overflow-hidden"
+                style={{
+                  background: 'rgba(96,116,86,0.04)',
+                  padding: '32px 24px',
+                  minHeight: '400px',
+                }}
+              >
+                {!code && !isGenerating ? (
+                  <div
+                    className="flex flex-col items-center justify-center gap-3 text-center"
+                    style={{ paddingTop: '80px' }}
+                  >
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
+                      style={{ background: 'rgba(96,116,86,0.1)' }}
+                    >
+                      ✦
+                    </div>
+                    <p className="text-sm font-medium" style={{ color: 'rgba(42,31,31,0.3)' }}>
+                      Your component will appear here
+                    </p>
+                    <p className="text-xs" style={{ color: 'rgba(42,31,31,0.2)' }}>
+                      Describe what you want and click Generate
+                    </p>
+                  </div>
+                ) : isGenerating && !previewHTML ? (
+                  <div
+                    className="flex flex-col items-center justify-center gap-4"
+                    style={{ paddingTop: '80px' }}
+                  >
+                    <div className="flex gap-1.5">
+                      {[0, 1, 2].map((i) => (
+                        <div
+                          key={i}
+                          className="w-2 h-2 rounded-full"
+                          style={{
+                            background: '#607456',
+                            animation: `bounce 0.6s ease-in-out ${i * 0.15}s infinite`,
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-xs font-mono" style={{ color: 'rgba(42,31,31,0.35)' }}>
+                      Generating component...
+                    </p>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      width: `${iframeWidth}px`,
+                      transform: `scale(${scale})`,
+                      transformOrigin: 'top center',
+                      height: `${400 / scale}px`,
+                      transition: 'transform 0.3s ease',
+                    }}
+                  >
+                    <iframe
+                      srcDoc={previewHTML}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        border: 'none',
+                        borderRadius: '8px',
+                        background: '#fff',
+                      }}
+                      sandbox="allow-scripts"
+                      title="Component Preview"
+                    />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div style={{ height: '400px' }}>
+                {code ? (
+                  <Editor
+                    height="100%"
+                    defaultLanguage="typescript"
+                    value={code}
+                    theme="vs-dark"
+                    options={{
+                      readOnly: true,
+                      minimap: { enabled: false },
+                      fontSize: 13,
+                      lineHeight: 22,
+                      padding: { top: 16, bottom: 16 },
+                      scrollBeyondLastLine: false,
+                      wordWrap: 'on',
+                      fontFamily: 'JetBrains Mono, Fira Code, monospace',
+                      fontLigatures: true,
+                      renderLineHighlight: 'none',
+                      overviewRulerLanes: 0,
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="flex items-center justify-center h-full"
+                    style={{ background: '#1e1e1e' }}
+                  >
+                    <p className="text-sm" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                      No code generated yet
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden relative">
-        <AnimatePresence mode="wait">
-          {mode === 'preview' ? (
-            <motion.div
-              key="preview"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="h-full flex items-start justify-center bg-[#0a0a0a] p-6 overflow-auto"
-            >
-              {!code && !isGenerating ? (
-                <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
-                    <Eye size={20} className="text-white/20" />
-                  </div>
-                  <p className="text-white/20 text-sm">Your component will appear here</p>
-                  <p className="text-white/10 text-xs">Describe what you want and click Generate</p>
-                </div>
-              ) : isGenerating && !previewHTML ? (
-                <div className="flex flex-col items-center justify-center h-full gap-4">
-                  <div className="flex gap-1">
-                    {[0, 1, 2].map((i) => (
-                      <motion.div
-                        key={i}
-                        className="w-2 h-2 rounded-full bg-blue-500"
-                        animate={{ y: [0, -8, 0] }}
-                        transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-white/30 text-xs font-mono">Generating component...</p>
-                </div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="w-full transition-all duration-500 bg-white rounded-xl overflow-hidden shadow-2xl"
-                  style={{ maxWidth: DEVICE_WIDTHS[device] }}
-                >
-                  <iframe
-                    srcDoc={previewHTML}
-                    className="w-full border-0"
-                    style={{ height: '600px' }}
-                    sandbox="allow-scripts"
-                    title="Component Preview"
-                  />
-                </motion.div>
-              )}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="code"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="h-full"
-            >
-              {code ? (
-                <Editor
-                  height="100%"
-                  defaultLanguage="typescript"
-                  value={code}
-                  theme="vs-dark"
-                  options={{
-                    readOnly: true,
-                    minimap: { enabled: false },
-                    fontSize: 13,
-                    lineHeight: 22,
-                    padding: { top: 16, bottom: 16 },
-                    scrollBeyondLastLine: false,
-                    wordWrap: 'on',
-                    fontFamily: 'JetBrains Mono, Fira Code, monospace',
-                    fontLigatures: true,
-                    renderLineHighlight: 'none',
-                    overviewRulerLanes: 0,
-                  }}
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-white/20 text-sm">No code generated yet</p>
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
+      <style>{`
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+      `}</style>
+    </section>
   );
 }

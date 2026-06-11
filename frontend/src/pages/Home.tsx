@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { History } from 'lucide-react';
 import { Header } from '../components/Header';
+import { HeroSection } from '../components/HeroSection';
 import { PromptInput } from '../components/PromptInput';
 import { PreviewPanel } from '../components/PreviewPanel';
 import { HistorySidebar } from '../components/HistorySidebar';
 import { useGenerator } from '../hooks/useGenerator';
+import { AboutSection } from '../components/AboutSection';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -36,6 +36,13 @@ export function Home() {
     clearHistory,
   } = useGenerator();
 
+  const handleGenerate = async (p: string) => {
+    await generate(p);
+    setTimeout(() => {
+      document.getElementById('preview-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 300);
+  };
+
   const handleEnhance = async (p: string) => {
     if (!p.trim() || isEnhancing) return;
     setIsEnhancing(true);
@@ -50,9 +57,12 @@ export function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col">
+    <div style={{ background: '#F7F2EA', minHeight: '100vh' }}>
 
-      <Header />
+      <Header
+        historyCount={history.length}
+        onHistoryClick={() => setSidebarOpen(true)}
+      />
 
       <HistorySidebar
         history={history}
@@ -62,64 +72,51 @@ export function Home() {
         onClose={() => setSidebarOpen(false)}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-8 flex flex-col gap-6">
+      <HeroSection />
 
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">
-              Build components with{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                AI
-              </span>
-            </h1>
-            <p className="text-white/30 text-sm mt-1">
-              Describe any UI component and get production-ready React and Tailwind code instantly
-            </p>
-          </div>
+      <PromptInput
+        prompt={prompt}
+        setPrompt={setPrompt}
+        onGenerate={handleGenerate}
+        onEnhance={handleEnhance}
+        isGenerating={isGenerating || isEnhancing}
+        onStop={stop}
+      />
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setSidebarOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all text-sm"
-          >
-            <History size={15} />
-            History
-            {history.length > 0 && (
-              <span className="text-xs bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded-full">
-                {history.length}
-              </span>
-            )}
-          </motion.button>
-        </div>
-
-        <PromptInput
-          prompt={prompt}
-          setPrompt={setPrompt}
-          onGenerate={generate}
-          onEnhance={handleEnhance}
-          isGenerating={isGenerating || isEnhancing}
-          onStop={stop}
-        />
-
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm"
+      {error && (
+        <div
+          className="max-w-7xl mx-auto px-6 py-4"
+          style={{ background: '#fff' }}
+        >
+          <div
+            className="px-4 py-3 rounded-xl text-sm"
+            style={{
+              background: 'rgba(220,50,50,0.06)',
+              border: '1px solid rgba(220,50,50,0.15)',
+              color: 'rgba(180,40,40,0.9)',
+            }}
           >
             {error}
-          </motion.div>
-        )}
-
-        <div className="h-[650px]">
-          <PreviewPanel
-            code={code}
-            isGenerating={isGenerating}
-          />
+          </div>
         </div>
+      )}
 
-      </main>
+      <PreviewPanel
+        code={code}
+        isGenerating={isGenerating}
+      />
+
+      <AboutSection />
+
+<footer
+  className="text-center py-8"
+  style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#607456' }}
+>
+  <p className="text-xs" style={{ color: '#EEE0CC' }}>
+    CraftUI · Built by Mohan · Powered by Groq · Open source on GitHub
+  </p>
+</footer>
+
     </div>
   );
 }
