@@ -33,7 +33,7 @@ root.innerHTML = `
       font-weight: 600;
       color: rgba(42,31,31,0.4);
       letter-spacing: 0.5px;
-    ">Loading CraftUI...</p>
+    ">Loading CompKraftUI...</p>
     <style>
       @keyframes pulse {
         0%, 100% { transform: scale(1); opacity: 1; }

@@ -1,4 +1,4 @@
-# ComponentCraft
+# CompKraftUI
 
 AI-powered React component generator. Describe any UI component in plain English and get production-ready React and Tailwind CSS code instantly, with a live preview.
 

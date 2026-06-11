@@ -28,7 +28,7 @@ export function Header({ historyCount, onHistoryClick }: HeaderProps) {
             className="text-sm font-black tracking-tight"
             style={{ color: '#EEE0CC', letterSpacing: '-0.3px' }}
           >
-            CraftUI
+            CompKraftUI
           </span>
         </div>
 
