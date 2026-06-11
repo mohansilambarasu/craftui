@@ -183,7 +183,7 @@ export function PromptInput({
                     Prompt may be too complex
                   </p>
                   <p className="text-xs leading-relaxed" style={{ color: 'rgba(186,106,76,0.8)' }}>
-                    CraftUI works best with short visual descriptions under 300 characters. Try: <em>"a dark navbar with logo, nav links, and user avatar"</em>
+                    CompKraftUI works best with short visual descriptions under 300 characters. Try: <em>"a dark navbar with logo, nav links, and user avatar"</em>
                   </p>
                 </div>
               </div>

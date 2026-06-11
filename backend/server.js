@@ -128,9 +128,9 @@ Return ONLY the enhanced prompt. No explanation, no preamble.`,
 });
 
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", message: "ComponentCraft API is running" });
+  res.json({ status: "ok", message: "CompKraftUI API is running" });
 });
 
 app.listen(PORT, () => {
-  console.log(`ComponentCraft backend running on port ${PORT}`);
+  console.log(`CompKraftUI backend running on port ${PORT}`);
 });

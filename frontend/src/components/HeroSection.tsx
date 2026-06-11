@@ -65,7 +65,7 @@ export function HeroSection() {
             className="text-xs font-bold tracking-widest uppercase"
             style={{ color: '#607456' }}
           >
-            AI Component Studio
+            CompKraftUI Studio
           </span>
         </div>
 
