@@ -57,7 +57,7 @@ export function Home() {
   };
 
   return (
-    <div style={{ background: '#F7F2EA', minHeight: '100vh' }}>
+    <div className="min-w-0 overflow-x-hidden" style={{ background: '#F7F2EA', minHeight: '100vh' }}>
 
       <Header
         historyCount={history.length}
@@ -85,7 +85,7 @@ export function Home() {
 
       {error && (
         <div
-          className="max-w-7xl mx-auto px-6 py-4"
+          className="max-w-7xl mx-auto px-4 sm:px-6 py-4"
           style={{ background: '#fff' }}
         >
           <div
@@ -108,14 +108,14 @@ export function Home() {
 
       <AboutSection />
 
-<footer
-  className="text-center py-8"
-  style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#607456' }}
->
-  <p className="text-xs" style={{ color: '#EEE0CC' }}>
-    CraftUI · Built by Mohan · Powered by Groq · Open source on GitHub
-  </p>
-</footer>
+      <footer
+        className="text-center px-4 py-7 sm:py-8"
+        style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#607456' }}
+      >
+        <p className="text-xs leading-relaxed" style={{ color: '#EEE0CC' }}>
+          CraftUI · Built by Mohan · Powered by Groq · Open source on GitHub
+        </p>
+      </footer>
 
     </div>
   );

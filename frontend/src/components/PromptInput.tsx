@@ -52,7 +52,7 @@ export function PromptInput({
         borderTop: '1px solid rgba(96,116,86,0.15)',
         borderBottom: '1px solid rgba(96,116,86,0.15)',
       }}
-      className="w-full py-12 px-6"
+      className="w-full px-4 py-10 sm:px-6 sm:py-12"
     >
       <div className="max-w-7xl mx-auto">
 
@@ -64,8 +64,8 @@ export function PromptInput({
             Step 01 — Describe
           </div>
           <h2
-            className="font-black mb-2"
-            style={{ fontSize: '28px', color: '#2A1F1F', letterSpacing: '-1px' }}
+            className="font-black mb-2 text-2xl sm:text-[28px]"
+            style={{ color: '#2A1F1F', letterSpacing: '-1px' }}
           >
             What do you want to build?
           </h2>
@@ -74,7 +74,7 @@ export function PromptInput({
           </p>
         </div>
 
-        <div className="grid gap-6" style={{ gridTemplateColumns: '1fr 300px' }}>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
 
           <div>
             <div
@@ -96,10 +96,10 @@ export function PromptInput({
                 style={{ color: '#2A1F1F', caretColor: '#607456' }}
               />
               <div
-                className="flex items-center justify-between pt-3 mt-2"
+                className="flex flex-col gap-3 pt-3 mt-2 sm:flex-row sm:items-center sm:justify-between"
                 style={{ borderTop: '1px solid rgba(96,116,86,0.15)' }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   <span className="text-xs font-mono" style={{ color: 'rgba(42,31,31,0.25)' }}>
                     ⌘ + Enter to generate
                   </span>
@@ -112,11 +112,11 @@ export function PromptInput({
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
                   <button
                     onClick={() => onEnhance(prompt)}
                     disabled={!prompt.trim() || isGenerating}
-                    className="flex items-center gap-1.5 text-xs font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="flex min-h-10 items-center justify-center gap-1.5 text-xs font-medium transition-all disabled:cursor-not-allowed disabled:opacity-30 sm:min-h-0"
                     style={{
                       background: 'rgba(96,116,86,0.1)',
                       border: '1px solid rgba(96,116,86,0.25)',
@@ -132,7 +132,7 @@ export function PromptInput({
                   {isGenerating ? (
                     <button
                       onClick={onStop}
-                      className="flex items-center gap-1.5 text-xs font-bold transition-all"
+                      className="flex min-h-10 items-center justify-center gap-1.5 text-xs font-bold transition-all sm:min-h-0"
                       style={{
                         background: 'rgba(123,37,37,0.08)',
                         border: '1px solid rgba(123,37,37,0.2)',
@@ -149,7 +149,7 @@ export function PromptInput({
                     <button
                       onClick={() => onGenerate(prompt)}
                       disabled={!prompt.trim()}
-                      className="flex items-center gap-1.5 text-xs font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="flex min-h-10 items-center justify-center gap-1.5 text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-30 sm:min-h-0"
                       style={{
                         background: '#607456',
                         border: 'none',
@@ -189,12 +189,12 @@ export function PromptInput({
               </div>
             )}
 
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
               {PROMPT_TEMPLATES.map((template) => (
                 <button
                   key={template.label}
                   onClick={() => setPrompt(template.prompt)}
-                  className="flex items-center gap-1.5 text-xs font-medium transition-all"
+                  className="flex min-h-10 items-center justify-center gap-1.5 text-xs font-medium transition-all sm:min-h-0 sm:justify-start"
                   style={{
                     background: '#EEE0CC',
                     border: '1px solid rgba(96,116,86,0.2)',

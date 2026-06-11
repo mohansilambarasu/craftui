@@ -34,15 +34,15 @@ export function HistorySidebar({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
           />
 
           <motion.div
-            initial={{ x: -320, opacity: 0 }}
+            initial={{ x: -360, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -320, opacity: 0 }}
+            exit={{ x: -360, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed left-0 top-0 bottom-0 w-80 bg-[#BA6A4C] border-r border-white/10 z-50 flex flex-col"
+            className="fixed left-0 top-0 bottom-0 z-50 flex w-[min(100vw,22rem)] flex-col border-r border-white/10 bg-[#BA6A4C] sm:w-80"
           >
             <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
               <div className="flex items-center gap-2">
