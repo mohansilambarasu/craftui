@@ -1,5 +1,4 @@
 import { useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Sparkles, Square, Wand2, AlertTriangle } from 'lucide-react';
 import { PROMPT_TEMPLATES } from '../lib/templates';
 
@@ -13,10 +12,10 @@ interface PromptInputProps {
 }
 
 const TIPS = [
-  { icon: '✅', text: 'a dark navbar with logo, 5 nav links, and user avatar dropdown' },
-  { icon: '✅', text: 'a pricing card with three tiers and a highlighted pro plan' },
-  { icon: '✅', text: 'a stats dashboard with 4 KPI cards showing revenue and growth' },
-  { icon: '❌', text: 'avoid numbered requirements, props interfaces, or multi-file requests' },
+  { good: true, text: 'a dark navbar with logo, 5 nav links, and user avatar dropdown' },
+  { good: true, text: 'a pricing card with three tiers and a highlighted pro plan' },
+  { good: true, text: 'a stats dashboard with 4 KPI cards showing revenue and growth' },
+  { good: false, text: 'avoid numbered requirements, props interfaces, or multi-file requests' },
 ];
 
 export function PromptInput({
@@ -46,110 +45,253 @@ export function PromptInput({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <section
+      id="prompt-section"
+      style={{
+        background: '#F7F2EA',
+        borderTop: '1px solid rgba(96,116,86,0.15)',
+        borderBottom: '1px solid rgba(96,116,86,0.15)',
+      }}
+      className="w-full py-12 px-6"
+    >
+      <div className="max-w-7xl mx-auto">
 
-      <div className="relative group">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 blur-sm" />
-        <div className={`relative bg-[#111111] rounded-2xl border transition-colors ${isTooLong || isComplex ? 'border-yellow-500/50' : 'border-white/10 group-focus-within:border-transparent'}`}>
-          <textarea
-            ref={textareaRef}
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Describe the component you want to build..."
-            rows={3}
-            className="w-full bg-transparent text-white placeholder-white/30 text-sm leading-relaxed px-4 pt-4 pb-2 resize-none focus:outline-none font-mono"
-          />
-          <div className="flex items-center justify-between px-4 pb-3 pt-1">
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-white/20 font-mono">⌘ + Enter to generate</span>
-              {prompt.length > 0 && (
-                <span className={`text-xs font-mono ${isTooLong ? 'text-yellow-400' : 'text-white/20'}`}>
-                  {prompt.length} chars
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => onEnhance(prompt)}
-                disabled={!prompt.trim() || isGenerating}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white/50 hover:text-white/80 border border-white/10 hover:border-white/20 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <Wand2 size={12} />
-                Enhance
-              </motion.button>
-              {isGenerating ? (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={onStop}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all"
-                >
-                  <Square size={12} />
-                  Stop
-                </motion.button>
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => onGenerate(prompt)}
-                  disabled={!prompt.trim()}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-400 hover:to-purple-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-blue-500/25"
-                >
-                  <Sparkles size={12} />
-                  Generate
-                </motion.button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {(isTooLong || isComplex) && (
-        <motion.div
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-start gap-3 px-4 py-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20"
-        >
-          <AlertTriangle size={14} className="text-yellow-400 mt-0.5 shrink-0" />
-          <div className="flex flex-col gap-1">
-            <p className="text-xs font-medium text-yellow-400">Prompt may be too complex</p>
-            <p className="text-xs text-white/40 leading-relaxed">
-              ComponentCraft works best with short, visual descriptions under 300 characters. Avoid numbered requirements, props interfaces, or multi-file requests. Try something like: <span className="text-white/60 italic">"a dark navbar with logo, nav links, and user avatar"</span>
-            </p>
-          </div>
-        </motion.div>
-      )}
-
-      <div className="flex flex-wrap gap-2">
-        {PROMPT_TEMPLATES.map((template) => (
-          <motion.button
-            key={template.label}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => setPrompt(template.prompt)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 text-white/50 border border-white/10 hover:bg-white/10 hover:text-white/80 hover:border-white/20 transition-all"
+        <div className="mb-8">
+          <div
+            className="text-xs font-bold tracking-widest uppercase mb-2"
+            style={{ color: 'rgba(42,31,31,0.35)' }}
           >
-            <span>{template.icon}</span>
-            {template.label}
-          </motion.button>
-        ))}
-      </div>
+            Step 01 — Describe
+          </div>
+          <h2
+            className="font-black mb-2"
+            style={{ fontSize: '28px', color: '#2A1F1F', letterSpacing: '-1px' }}
+          >
+            What do you want to build?
+          </h2>
+          <p className="text-sm" style={{ color: 'rgba(42,31,31,0.45)' }}>
+            Describe your component in plain English. Keep it visual and concise.
+          </p>
+        </div>
 
-      <div className="bg-white/[0.03] border border-white/5 rounded-xl px-4 py-3">
-        <p className="text-xs font-medium text-white/30 mb-2">💡 Prompt tips</p>
-        <div className="flex flex-col gap-1.5">
-          {TIPS.map((tip, i) => (
-            <p key={i} className="text-xs text-white/25 leading-relaxed">
-              <span className="mr-1.5">{tip.icon}</span>
-              {tip.text}
-            </p>
-          ))}
+        <div className="grid gap-6" style={{ gridTemplateColumns: '1fr 300px' }}>
+
+          <div>
+            <div
+              className="rounded-xl mb-4 transition-all"
+              style={{
+                background: '#EEE0CC',
+                border: `1.5px solid ${isTooLong || isComplex ? '#BA6A4C' : '#607456'}`,
+                padding: '14px 16px',
+              }}
+            >
+              <textarea
+                ref={textareaRef}
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Describe the component you want to build..."
+                rows={3}
+                className="w-full bg-transparent resize-none focus:outline-none font-mono text-sm leading-relaxed"
+                style={{ color: '#2A1F1F', caretColor: '#607456' }}
+              />
+              <div
+                className="flex items-center justify-between pt-3 mt-2"
+                style={{ borderTop: '1px solid rgba(96,116,86,0.15)' }}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-mono" style={{ color: 'rgba(42,31,31,0.25)' }}>
+                    ⌘ + Enter to generate
+                  </span>
+                  {prompt.length > 0 && (
+                    <span
+                      className="text-xs font-mono"
+                      style={{ color: isTooLong ? '#BA6A4C' : 'rgba(42,31,31,0.2)' }}
+                    >
+                      {prompt.length} chars
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => onEnhance(prompt)}
+                    disabled={!prompt.trim() || isGenerating}
+                    className="flex items-center gap-1.5 text-xs font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    style={{
+                      background: 'rgba(96,116,86,0.1)',
+                      border: '1px solid rgba(96,116,86,0.25)',
+                      color: '#607456',
+                      padding: '5px 12px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Wand2 size={11} />
+                    Enhance
+                  </button>
+                  {isGenerating ? (
+                    <button
+                      onClick={onStop}
+                      className="flex items-center gap-1.5 text-xs font-bold transition-all"
+                      style={{
+                        background: 'rgba(123,37,37,0.08)',
+                        border: '1px solid rgba(123,37,37,0.2)',
+                        color: '#7B2525',
+                        padding: '5px 14px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <Square size={11} />
+                      Stop
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => onGenerate(prompt)}
+                      disabled={!prompt.trim()}
+                      className="flex items-center gap-1.5 text-xs font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      style={{
+                        background: '#607456',
+                        border: 'none',
+                        color: '#EEE0CC',
+                        padding: '5px 14px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.background = '#506346')}
+                      onMouseLeave={e => (e.currentTarget.style.background = '#607456')}
+                    >
+                      <Sparkles size={11} />
+                      Generate
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {(isTooLong || isComplex) && (
+              <div
+                className="flex items-start gap-3 rounded-xl mb-4 p-3"
+                style={{
+                  background: 'rgba(186,106,76,0.08)',
+                  border: '1px solid rgba(186,106,76,0.2)',
+                }}
+              >
+                <AlertTriangle size={13} style={{ color: '#BA6A4C', marginTop: '1px', flexShrink: 0 }} />
+                <div>
+                  <p className="text-xs font-semibold mb-0.5" style={{ color: '#BA6A4C' }}>
+                    Prompt may be too complex
+                  </p>
+                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(186,106,76,0.8)' }}>
+                    CraftUI works best with short visual descriptions under 300 characters. Try: <em>"a dark navbar with logo, nav links, and user avatar"</em>
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-2">
+              {PROMPT_TEMPLATES.map((template) => (
+                <button
+                  key={template.label}
+                  onClick={() => setPrompt(template.prompt)}
+                  className="flex items-center gap-1.5 text-xs font-medium transition-all"
+                  style={{
+                    background: '#EEE0CC',
+                    border: '1px solid rgba(96,116,86,0.2)',
+                    color: 'rgba(42,31,31,0.5)',
+                    padding: '5px 12px',
+                    borderRadius: '20px',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = '#ddd5bf';
+                    e.currentTarget.style.color = '#2A1F1F';
+                    e.currentTarget.style.borderColor = 'rgba(96,116,86,0.4)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = '#EEE0CC';
+                    e.currentTarget.style.color = 'rgba(42,31,31,0.5)';
+                    e.currentTarget.style.borderColor = 'rgba(96,116,86,0.2)';
+                  }}
+                >
+                  <span>{template.icon}</span>
+                  {template.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <div
+              className="rounded-xl p-4"
+              style={{
+                background: '#EEE0CC',
+                border: '1px solid rgba(96,116,86,0.15)',
+              }}
+            >
+              <div
+                className="text-xs font-bold tracking-widest uppercase mb-3"
+                style={{ color: 'rgba(42,31,31,0.35)' }}
+              >
+                💡 Prompt tips
+              </div>
+              <div className="flex flex-col gap-1.5">
+                {TIPS.map((tip, i) => (
+                  <p
+                    key={i}
+                    className="text-xs leading-relaxed"
+                    style={{ color: tip.good ? 'rgba(42,31,31,0.55)' : 'rgba(42,31,31,0.3)' }}
+                  >
+                    <span className="mr-1.5">{tip.good ? '✅' : '❌'}</span>
+                    {tip.text}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            <div
+              className="rounded-xl p-4"
+              style={{
+                background: '#EEE0CC',
+                border: '1px solid rgba(96,116,86,0.15)',
+              }}
+            >
+              <div
+                className="text-xs font-bold tracking-widest uppercase mb-3"
+                style={{ color: 'rgba(42,31,31,0.35)' }}
+              >
+                🕐 How it works
+              </div>
+              <div className="flex flex-col gap-2">
+                {[
+                  'Describe what you want to see',
+                  'AI generates React and Tailwind code',
+                  'Preview renders live in the browser',
+                  'Copy or download the .tsx file',
+                ].map((step, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <div
+                      className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                      style={{
+                        background: '#607456',
+                        color: '#EEE0CC',
+                        fontSize: '9px',
+                        fontWeight: 700,
+                      }}
+                    >
+                      {i + 1}
+                    </div>
+                    <p className="text-xs leading-relaxed" style={{ color: 'rgba(42,31,31,0.5)' }}>
+                      {step}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-
-    </div>
+    </section>
   );
 }
