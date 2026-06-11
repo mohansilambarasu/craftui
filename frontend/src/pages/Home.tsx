@@ -113,7 +113,7 @@ export function Home() {
         style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#607456' }}
       >
         <p className="text-xs leading-relaxed" style={{ color: '#EEE0CC' }}>
-          CraftUI · Built by Mohan · Powered by Groq · Open source on GitHub
+          CompKraftUI · Built by Mohan · Powered by Groq · Open source on GitHub
         </p>
       </footer>
 

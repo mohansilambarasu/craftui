@@ -1,8 +1,8 @@
-# CraftUI — AI Component Studio
+# CompKraftUI
 
 🔗 Live demo: https://craftui-liard.vercel.app
 
-CraftUI / ComponentCraft is an AI-powered interface generation platform that turns natural language prompts into production-style React and Tailwind CSS components.
+CompKraftUI is an AI-powered interface generation platform that turns natural language prompts into production-style React and Tailwind CSS components.
 
 It combines prompt enhancement, real-time streamed code generation, responsive preview modes, and a polished developer workflow so builders can move from idea to usable UI faster.
 
@@ -128,7 +128,7 @@ Generated history is kept in frontend memory for the active session and clears o
 
 ## AI Integration With Groq
 
-CraftUI uses Groq to power two AI workflows: prompt enhancement and streamed component generation. The backend creates the Groq client in `backend/server.js`:
+CompKraftUI uses Groq to power two AI workflows: prompt enhancement and streamed component generation. The backend creates the Groq client in `backend/server.js`:
 
 ```js
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -219,7 +219,7 @@ node server.js
 Expected output:
 
 ```text
-ComponentCraft backend running on port 3001
+CompKraftUI backend running on port 3001
 ```
 
 Health check:
@@ -253,7 +253,7 @@ Example response:
 ```json
 {
   "status": "ok",
-  "message": "ComponentCraft API is running"
+  "message": "CompKraftUI API is running"
 }
 ```
 
@@ -349,4 +349,4 @@ Built by Mohan Silambarasu Elangkumaran.
 
 ## Notes
 
-CraftUI currently uses a lightweight MVP architecture focused on the core AI generation loop: prompt, enhance, stream, preview, copy, and download. Database persistence, authentication, and multi-user workspaces are natural next steps rather than requirements for the current version.
+CompKraftUI currently uses a lightweight MVP architecture focused on the core AI generation loop: prompt, enhance, stream, preview, copy, and download. Database persistence, authentication, and multi-user workspaces are natural next steps rather than requirements for the current version.
