@@ -1,6 +1,6 @@
 function CoffeeCup() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#EEE0CC', borderRadius: '16px', border: '1px solid rgba(96,116,86,0.15)', padding: '28px 24px', gap: '16px' }}>
+    <div className="w-full max-w-xs justify-self-center lg:max-w-none" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#EEE0CC', borderRadius: '16px', border: '1px solid rgba(96,116,86,0.15)', padding: '28px 24px', gap: '16px' }}>
 
       <div style={{ position: 'relative', width: '100px', height: '110px' }}>
         <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px' }}>
@@ -54,6 +54,7 @@ function CoffeeCup() {
 
       <a
         href="mailto:melangku@gmu.edu"
+        className="min-h-10 sm:min-h-0"
         style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -106,10 +107,10 @@ export function AboutSection() {
       className="w-full"
     >
       <div
+        className="px-4 py-10 sm:px-8"
         style={{
           position: 'relative',
           zIndex: 2,
-          padding: '40px 32px 32px',
           borderBottom: '1px solid rgba(96,116,86,0.15)',
         }}
       >
@@ -123,12 +124,11 @@ export function AboutSection() {
           </div>
 
           <div
-            className="grid gap-8"
-            style={{ gridTemplateColumns: '1fr 240px' }}
+            className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_240px]"
           >
-            <div>
+            <div className="min-w-0">
               <div
-                className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full"
+                className="inline-flex max-w-full items-center gap-2 rounded-full px-3 py-1 mb-4"
                 style={{
                   background: 'rgba(96,116,86,0.08)',
                   border: '1.5px solid rgba(96,116,86,0.2)',
@@ -138,14 +138,14 @@ export function AboutSection() {
                   className="w-1.5 h-1.5 rounded-full"
                   style={{ background: '#607456', animation: 'pulse-dot 2s infinite' }}
                 />
-                <span className="text-xs font-bold" style={{ color: '#607456', letterSpacing: '0.3px' }}>
+                <span className="text-xs font-bold leading-relaxed" style={{ color: '#607456', letterSpacing: '0.3px' }}>
                   Available · July 2026 · F1 OPT
                 </span>
               </div>
 
               <h2
-                className="font-black mb-1"
-                style={{ fontSize: '34px', color: '#2A1F1F', letterSpacing: '-1.5px', lineHeight: 1.0 }}
+                className="font-black mb-1 text-3xl sm:text-[34px]"
+                style={{ color: '#2A1F1F', letterSpacing: '-0.04em', lineHeight: 1.0 }}
               >
                 Mohan Silambarasu<br />Elangkumaran
               </h2>
@@ -154,28 +154,23 @@ export function AboutSection() {
               </p>
 
               <div style={{ borderLeft: '3px solid #BA6A4C', paddingLeft: '14px' }}>
-                <p className="text-md leading-relaxed text-justify" style={{ color: 'rgba(42,31,31,0.55)', lineHeight: 1.65, maxWidth: '600px'}}>
+                <p className="text-sm leading-relaxed sm:text-base sm:text-justify" style={{ color: 'rgba(42,31,31,0.55)', lineHeight: 1.65, maxWidth: '600px'}}>
                   I build things that actually work in production. Hungry for the craft, using AI to ship production-level tools. Graduated May 2026 with Academic Excellence Award from George Mason University. Looking for full-time and internship opportunities anywhere across the U.S.
                 </p>
               </div>
 
               <div style={{ width: '100%', height: '1px', background: 'rgba(96,116,86,0.15)', margin: '20px 0' }} />
 
-              <div className="flex gap-0">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                 {[
                   { num: '2+', label: 'Software Industry experience' },
                   { num: '4.0 GPA', label: 'MS in Information Technology' },
                   { num: 'F1 OPT', label: 'U.S Work Authorized' },
                   { num: 'Open', label: 'Anywhere in U.S.' },
-                ].map((stat, i, arr) => (
+                ].map((stat) => (
                   <div
                     key={stat.num}
-                    className="flex-1"
-                    style={{
-                      paddingRight: i < arr.length - 1 ? '20px' : '0',
-                      marginRight: i < arr.length - 1 ? '20px' : '0',
-                      borderRight: i < arr.length - 1 ? '1px solid rgba(96,116,86,0.15)' : 'none',
-                    }}
+                    className="min-w-0 rounded-lg border border-[rgba(96,116,86,0.15)] p-3 md:border-0 md:border-r md:p-0 md:pr-4 last:md:border-r-0"
                   >
                     <div className="font-black" style={{ fontSize: '22px', color: '#607456', letterSpacing: '-1px' }}>
                       {stat.num}
@@ -201,9 +196,9 @@ export function AboutSection() {
           background: '#EEE0CC',
           borderBottom: '1px solid rgba(96,116,86,0.15)',
         }}
-        className="px-8 py-5"
+        className="px-4 py-5 sm:px-8"
       >
-        <div className="max-w-7xl mx-auto flex flex-wrap gap-2">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
           {[
             { label: 'GitHub ↗', href: 'https://github.com/mohansilambarasu', bg: 'rgba(42,31,31,0.05)', color: '#607456', hoverBg: '#607456', hoverColor: '#EEE0CC', border: '1.5px solid rgba(42,31,31,0.2)' },
             { label: 'LinkedIn ↗', href: 'https://linkedin.com/in/mohan-silambarasu-elangkumaran', bg: 'rgba(42,31,31,0.05)', color: '#607456', hoverBg: '#607456', hoverColor: '#EEE0CC', border: '1.5px solid rgba(42,31,31,0.2)' },
@@ -214,7 +209,7 @@ export function AboutSection() {
               href={btn.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-lg transition-all"
+              className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold transition-all sm:min-h-0 sm:justify-start"
               style={{ background: btn.bg, color: btn.color, border: btn.border, textDecoration: 'none', cursor: 'pointer' }}
               onMouseEnter={e => (e.currentTarget.style.background = btn.hoverBg , e.currentTarget.style.color = btn.hoverColor)}
               onMouseLeave={e => (e.currentTarget.style.background = btn.bg, e.currentTarget.style.color = btn.color)}

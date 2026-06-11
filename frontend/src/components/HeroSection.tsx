@@ -7,8 +7,8 @@ export function HeroSection() {
 
   return (
     <section
-      className="relative w-full overflow-hidden"
-      style={{ background: '#EEE0CC', minHeight: 'calc(100vh - 56px)' }}
+      className="relative w-full overflow-hidden min-h-[calc(100svh-56px)]"
+      style={{ background: '#EEE0CC' }}
     >
       <HeroBackground />
 
@@ -49,8 +49,7 @@ export function HeroSection() {
       </div>
 
       <div
-        className="relative z-10 flex flex-col items-center justify-center text-center px-6"
-        style={{ minHeight: 'calc(100vh - 56px)' }}
+        className="relative z-10 flex min-h-[calc(100svh-56px)] flex-col items-center justify-center px-4 py-20 text-center sm:px-6 sm:py-24"
       >
         <div
           className="inline-flex items-center gap-2 mb-6"
@@ -73,9 +72,9 @@ export function HeroSection() {
         <h1
           className="font-black mb-4"
           style={{
-            fontSize: 'clamp(40px, 7vw, 72px)',
+            fontSize: 'clamp(38px, 11vw, 72px)',
             lineHeight: 1.0,
-            letterSpacing: '-3px',
+            letterSpacing: '-0.04em',
             color: '#2A1F1F',
             maxWidth: '700px',
           }}
@@ -116,14 +115,14 @@ export function HeroSection() {
           </button>
         </div>
 
-        <div className="flex items-center gap-8">
+        <div className="grid w-full max-w-sm grid-cols-2 gap-x-4 gap-y-5 sm:max-w-2xl sm:grid-cols-4 sm:gap-x-6">
           {[
             { num: 'Free', label: 'Powered by Groq' },
             { num: 'Live', label: 'Instant preview' },
             { num: 'Download', label: 'ready in seconds' },
             { num: 'Open', label: 'Source on GitHub' },
-          ].map((stat, i, arr) => (
-            <div key={stat.num} className="flex items-center gap-8">
+          ].map((stat) => (
+            <div key={stat.num}>
               <div className="text-center">
                 <div
                   className="font-black"
@@ -135,16 +134,13 @@ export function HeroSection() {
                   {stat.label}
                 </div>
               </div>
-              {i < arr.length - 1 && (
-                <div style={{ width: '1px', height: '32px', background: 'rgba(42,31,31,0.1)' }} />
-              )}
             </div>
           ))}
         </div>
       </div>
 
       <div
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-xs tracking-widest"
+        className="absolute bottom-4 left-1/2 hidden -translate-x-1/2 text-xs tracking-widest sm:block"
         style={{ color: 'rgba(42,31,31,0.2)' }}
       >
         ↓ scroll to start building

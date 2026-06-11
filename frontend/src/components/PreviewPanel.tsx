@@ -75,8 +75,8 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
   useEffect(() => {
     const updateScale = () => {
       if (containerRef.current) {
-        const containerWidth = containerRef.current.clientWidth - 48;
-        setScale(Math.min(1, containerWidth / iframeWidth));
+        const containerWidth = Math.max(280, containerRef.current.clientWidth - 32);
+        setScale(Math.min(1, Math.max(0.25, containerWidth / iframeWidth)));
       }
     };
     updateScale();
@@ -107,7 +107,7 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
         background: '#EEE0CC',
         borderTop: '1px solid rgba(96,116,86,0.15)',
       }}
-      className="w-full py-12 px-6"
+      className="w-full px-4 py-10 sm:px-6 sm:py-12"
     >
       <div className="max-w-7xl mx-auto">
 
@@ -119,8 +119,8 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
             Step 02 — Preview
           </div>
           <h2
-            className="font-black mb-2"
-            style={{ fontSize: '28px', color: '#2A1F1F', letterSpacing: '-1px' }}
+            className="font-black mb-2 text-2xl sm:text-[28px]"
+            style={{ color: '#2A1F1F', letterSpacing: '-1px' }}
           >
             Your component, live.
           </h2>
@@ -130,7 +130,7 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
         </div>
 
         <div
-          className="rounded-2xl overflow-hidden"
+          className="overflow-hidden rounded-xl sm:rounded-2xl"
           style={{
             background: '#F7F2EA',
             border: '1px solid rgba(96,116,86,0.2)',
@@ -138,14 +138,14 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
           }}
         >
           <div
-            className="flex items-center justify-between px-5 py-3"
+            className="flex flex-col gap-3 px-3 py-3 sm:px-5 md:flex-row md:items-center md:justify-between"
             style={{
               borderBottom: '1px solid rgba(96,116,86,0.12)',
               background: '#EEE0CC',
             }}
           >
             <div
-              className="flex gap-1 p-1 rounded-lg"
+              className="grid w-full grid-cols-2 gap-1 rounded-lg p-1 sm:w-auto sm:flex"
               style={{ background: 'rgba(96,116,86,0.1)' }}
             >
               {[
@@ -155,7 +155,7 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
                 <button
                   key={id}
                   onClick={() => setMode(id as PreviewMode)}
-                  className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md transition-all"
+                  className="flex min-h-10 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-all sm:min-h-0"
                   style={{
                     background: mode === id ? '#F7F2EA' : 'transparent',
                     color: mode === id ? '#2A1F1F' : 'rgba(42,31,31,0.4)',
@@ -169,10 +169,10 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
               ))}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between md:w-auto md:justify-end md:gap-3">
               {mode === 'preview' && (
                 <div
-                  className="flex gap-1 p-1 rounded-lg"
+                  className="grid grid-cols-3 gap-1 rounded-lg p-1 sm:flex"
                   style={{ background: 'rgba(96,116,86,0.1)' }}
                 >
                   {([
@@ -183,7 +183,7 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
                     <button
                       key={id}
                       onClick={() => setDevice(id)}
-                      className="p-1.5 rounded-md transition-all"
+                      className="flex min-h-10 items-center justify-center rounded-md p-1.5 transition-all sm:min-h-0"
                       style={{
                         background: device === id ? '#607456' : 'transparent',
                         color: device === id ? '#EEE0CC' : 'rgba(42,31,31,0.35)',
@@ -198,10 +198,10 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
               )}
 
               {code && (
-                <div className="flex gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:flex">
                   <button
                     onClick={handleCopy}
-                    className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
+                    className="flex min-h-10 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all sm:min-h-0"
                     style={{
                       background: 'rgba(96,116,86,0.08)',
                       border: '1px solid rgba(96,116,86,0.2)',
@@ -214,7 +214,7 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
                   </button>
                   <button
                     onClick={handleDownload}
-                    className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
+                    className="flex min-h-10 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all sm:min-h-0"
                     style={{
                       background: '#607456',
                       border: 'none',
@@ -238,8 +238,8 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
                 className="flex items-start justify-center overflow-hidden"
                 style={{
                   background: 'rgba(96,116,86,0.04)',
-                  padding: '32px 24px',
-                  minHeight: '400px',
+                  padding: '24px 16px',
+                  height: 'clamp(360px, 65vh, 520px)',
                 }}
               >
                 {!code && !isGenerating ? (
@@ -287,7 +287,7 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
                       width: `${iframeWidth}px`,
                       transform: `scale(${scale})`,
                       transformOrigin: 'top center',
-                      height: `${400 / scale}px`,
+                      height: '100%',
                       transition: 'transform 0.3s ease',
                     }}
                   >
@@ -307,7 +307,7 @@ export function PreviewPanel({ code, isGenerating }: PreviewPanelProps) {
                 )}
               </div>
             ) : (
-              <div style={{ height: '400px' }}>
+              <div className="h-[360px] sm:h-[400px]">
                 {code ? (
                   <Editor
                     height="100%"
